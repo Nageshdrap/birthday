@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Happy Birthday 💖</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --accent: #ff6b9a;
+      --accent-2: #ffb3d1;
+      --bg: linear-gradient(135deg,#fff6fb 0%, #fffaf0 100%);
+      --card-bg: rgba(255,255,255,0.85);
+    }
+
+    html,body{
+      height:100%;
+      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: var(--bg);
+      color:#222;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 3rem 1rem;
+      overflow: hidden;
+    }
+
+    .card-bday {
+      background: var(--card-bg);
+      border: none;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      padding: 2rem;
+      max-width: 900px;
+      width: 100%;
+      z-index: 5;
+    }
+
+    .name {
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 0.6px;
+    }
+
+    .heart {
+      display:inline-block;
+      transform-origin:center;
+      animation: beat 1s infinite;
+      color: var(--accent);
+      margin-left: 0.35rem;
+    }
+
+    @keyframes beat{
+      0% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+      100% { transform: scale(1); }
+    }
+
+    .balloon {
+      background: radial-gradient(circle at 30% 30%, #fff 0 8%, rgba(255,255,255,0) 10%), linear-gradient(180deg, #ffd1e6, #ff6b9a);
+      width: 72px;
+      height: 92px;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      display:inline-block;
+      position: absolute;
+      left: 8%;
+      top: 6%;
+      transform: rotate(-10deg);
+      box-shadow: 0 6px 20px rgba(255,107,154,0.25);
+      z-index: 2;
+    }
+    .balloon::after{
+      content:'';
+      width: 2px;
+      height: 38px;
+      background: linear-gradient(#d089a6, #ffc9df);
+      position: absolute;
+      left: 50%;
+      top: 88%;
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+
+    /* small decorative hearts */
+    .hearts-wrap { position:absolute; right:8%; top:10%; z-index:3; }
+    .heart-sm { font-size: 28px; opacity:0.95; transform: translateY(-10px) rotate(-10deg); }
+    .lead-msg { font-size:1.05rem; color:#444; }
+
+    .countdown {
+      display:flex;
+      gap: 12px;
+      margin-top: 1rem;
+      flex-wrap:wrap;
+    }
+    .countdown .unit {
+      background:rgba(255,255,255,0.95);
+      border-radius: 12px;
+      padding: 0.8rem 1.05rem;
+      min-width:82px;
+      text-align:center;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+    }
+    .countdown .num { font-weight:700; font-size:1.25rem; color:#222; }
+    .countdown .lbl { font-size:0.75rem; color:#666; }
+
+    .btn-gift {
+      background: linear-gradient(90deg, #ff6b9a, #ff8fcc);
+      border: none;
+      padding: 0.6rem 1.1rem;
+      border-radius: 999px;
+      color:white;
+      font-weight:600;
+      box-shadow: 0 8px 20px rgba(255,107,154,0.18);
+    }
+
+    /* footer badge */
+    .from {
+      margin-top:1rem;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      color:#333;
+      font-weight:600;
+    }
+
+    /* confetti canvas covers whole screen */
+    #confettiCanvas{
+      position: fixed;
+      left:0;
+      top:0;
+      width:100%;
+      height:100vh;
+      pointer-events:none;
+      z-index:9;
+    }
+
+    /* responsive tweaks */
+    @media (max-width: 768px){
+      .balloon{ left: 4%; top: 4%; transform: scale(0.9) rotate(-8deg); }
+      .card-bday{ padding:1.25rem; border-radius:14px; }
+      .countdown .unit{ min-width:68px; padding:0.6rem 0.8rem;}
+    }
+  </style>
+</head>
+<body>
+  <!-- confetti canvas -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <section class="hero">
+    <div class="balloon" aria-hidden="true"></div>
+    <div class="hearts-wrap">
+      <div class="heart-sm" style="font-size:34px;color:#ff7aa3">💗</div>
+      <div class="heart-sm" style="font-size:28px;color:#ffa3ce;margin-top:6px">💕</div>
+    </div>
+
+    <div class="card card-bday">
+      <div class="row g-4 align-items-center">
+        <div class="col-md-6">
+          <h5 class="text-muted">A special day for</h5>
+          <!-- CHANGE the name here -->
+          <h1 class="display-5 name">Amelia <span class="heart">❤️</span></h1>
+
+          <p class="lead-msg">Happy Birthday, my love. You make every day brighter — today is all about you! 🎂✨</p>
+
+          <!-- Countdown: change the target date below in the JS if needed -->
+          <div class="countdown" id="countdown">
+            <div class="unit">
+              <div class="num" id="days">—</div>
+              <div class="lbl">Days</div>
+            </div>
+            <div class="unit">
+              <div class="num" id="hours">—</div>
+              <div class="lbl">Hours</div>
+            </div>
+            <div class="unit">
+              <div class="num" id="minutes">—</div>
+              <div class="lbl">Minutes</div>
+            </div>
+            <div class="unit">
+              <div class="num" id="seconds">—</div>
+              <div class="lbl">Seconds</div>
+            </div>
+          </div>
+
+          <div class="mt-4 d-flex gap-2 align-items-center">
+            <button class="btn btn-gift" id="openGiftBtn">Open Gift 🎁</button>
+            <button class="btn btn-outline-secondary" id="playConfettiBtn">Celebrate 🎉</button>
+          </div>
+
+          <div class="from">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="margin-top:2px">
+              <path d="M12 21s-7-4.35-9-8.14C1.84 8.7 6.2 4 12 4s10.16 4.7 9 8.86C19 16.65 12 21 12 21z" fill="#ff6b9a"/>
+            </svg>
+            <div>From — <strong style="color: #ff6b9a; margin-left:6px">Nagesh</strong></div>
+          </div>
+
+        </div>
+
+        <div class="col-md-6 text-center">
+          <!-- Decorative image / card -->
+          <img src="./ashwini.jpg" alt="Birthday" class="img-fluid rounded-4 shadow-sm" style="max-height:320px;object-fit:cover;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gift Modal -->
+  <div class="modal fade" id="giftModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius:18px">
+        <div class="modal-body text-center p-4">
+          <div style="font-size:44px">🎁</div>
+          <h4 class="mt-2">A little surprise</h4>
+          <p class="mb-3">I made this just for you — every moment with you is my favorite. Happy Birthday!</p>
+
+          <div class="mb-3">
+            
+            <button class="btn btn-gift ms-2" id="revealNote">Reveal Note</button>
+          </div>
+
+          <div id="note" style="display:none; padding:0.75rem; border-radius:10px; background:linear-gradient(90deg,#fff0f6,#fff6f9);">
+            <strong>Love note:</strong>
+            <p style="margin:0.25rem 0 0">You are my sunshine — thank you for being you. ❤️</p>
+          </div>
+
+          <div class="mt-3">
+            <button class="btn btn-link" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS Bundle (includes Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    /************* CONFIG - Edit these to personalize *************/
+    // set the birthday target as Year, MonthIndex (0=Jan), Day, Hour, Minute, Second
+    // Example: new Date(2026, 4, 12, 0, 0, 0) => May 12, 2026
+    const targetDate = new Date(2026, 0, 12, 0, 0, 0); // <-- change this to the real birthday
+    const recipientName = "Ashwini"; // change name shown in modal/header if you like
+    /*************************************************************/
+
+    // write name into page (so you can change variable instead of editing HTML)
+    document.querySelectorAll('.name').forEach(el => el.textContent = recipientName + ' ');
+    // append heart
+    const heartEl = document.createElement('span');
+    heartEl.className = 'heart';
+    heartEl.innerHTML = '❤️';
+    document.querySelector('.name').appendChild(heartEl);
+
+    // Countdown
+    function updateCountdown() {
+      const now = new Date();
+      const diff = targetDate - now;
+      if (diff <= 0) {
+        document.getElementById('days').textContent = '00';
+        document.getElementById('hours').textContent= '00';
+        document.getElementById('minutes').textContent= '00';
+        document.getElementById('seconds').textContent= '00';
+        return;
+      }
+      const sec = Math.floor(diff / 1000);
+      const days = Math.floor(sec / 86400);
+      const hours = Math.floor((sec % 86400) / 3600);
+      const minutes = Math.floor((sec % 3600) / 60);
+      const seconds = Math.floor(sec % 60);
+      document.getElementById('days').textContent = String(days).padStart(2, '0');
+      document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // Gift modal open
+    const giftModal = new bootstrap.Modal(document.getElementById('giftModal'));
+    document.getElementById('openGiftBtn').addEventListener('click', () => {
+      giftModal.show();
+      startConfetti(150);
+    });
+
+    // Reveal note
+    document.getElementById('revealNote').addEventListener('click', (e) => {
+      e.target.style.display = 'none';
+      document.getElementById('note').style.display = 'block';
+    });
+
+    // playlist (example: change to your playlist link)
+   // document.getElementById('openPlaylist').addEventListener('click', (e) => {
+     // e.preventDefault();
+     // window.open('https://open.spotify.com/', '_blank');
+   // });
+
+    /***************** Simple confetti animation *****************/
+    // Lightweight confetti — works without external libs.
+    const canvas = document.getElementById('confettiCanvas');
+    const ctx = canvas.getContext('2d');
+    let W = canvas.width = window.innerWidth;
+    let H = canvas.height = window.innerHeight;
+    window.addEventListener('resize', () => {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    });
+
+    function random(min, max){ return Math.random() * (max - min) + min; }
+
+    class Confetti {
+      constructor(){
+        this.x = random(0, W);
+        this.y = random(-H, 0);
+        this.r = random(6, 12);
+        this.d = random(1, 3);
+        this.tilt = random(-10, 10);
+        this.color = `hsl(${Math.floor(random(320, 360))}, 90%, ${Math.floor(random(55,70))}%)`;
+        this.speedY = random(1, 4);
+        this.speedX = random(-1.5, 1.5);
+        this.rotation = random(0, Math.PI*2);
+      }
+      update(){
+        this.y += this.speedY + Math.sin(this.d);
+        this.x += this.speedX + Math.cos(this.d);
+        this.tilt += 0.02;
+        if(this.y > H + 20) {
+          this.y = random(-40, -10);
+          this.x = random(0, W);
+        }
+      }
+      draw(){
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation);
+        ctx.fillStyle = this.color;
+        ctx.fillRect(-this.r/2 + Math.sin(this.tilt)*4, -this.r/2, this.r, this.r*0.6);
+        ctx.restore();
+      }
+    }
+
+    let confettiPieces = [];
+    let confettiPlaying = false;
+    let confettiAnim;
+
+    function startConfetti(count = 100){
+      confettiPieces = [];
+      for (let i=0;i<count;i++) confettiPieces.push(new Confetti());
+      confettiPlaying = true;
+      if (!confettiAnim) requestAnimationFrame(runConfetti);
+      // auto stop after 7s
+      setTimeout(stopConfetti, 7000);
+    }
+
+    function stopConfetti(){
+      confettiPlaying = false;
+    }
+
+    function runConfetti(){
+      ctx.clearRect(0,0,W,H);
+      if (!confettiPlaying && confettiPieces.length === 0) {
+        cancelAnimationFrame(confettiAnim);
+        confettiAnim = null;
+        return;
+      }
+
+      confettiPieces.forEach((p, i) => {
+        p.update();
+        p.draw();
+        // remove if below
+        if (!confettiPlaying && p.y > H + 30) confettiPieces.splice(i,1);
+      });
+
+      confettiAnim = requestAnimationFrame(runConfetti);
+    }
+
+    // button to trigger confetti manually
+    document.getElementById('playConfettiBtn').addEventListener('click', () => startConfetti(120));
+
+    // Start a small background confetti wave on page load
+    window.addEventListener('load', () => setTimeout(()=>startConfetti(40), 800));
+  </script>
+</body>
+</html>
